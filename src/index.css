@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@theme {
+  /* Neutral Colors */
+  --color-neutral-900: hsl(243 96% 9%);
+  --color-neutral-800: hsl(243 27% 20%);
+  --color-neutral-700: hsl(243 23% 24%);
+  --color-neutral-600: hsl(243 23% 30%);
+  --color-neutral-300: hsl(240 6% 70%);
+  --color-neutral-200: hsl(250 6% 84%);
+  --color-neutral-0: hsl(0 0% 100%);
+  
+  /* Brand Colors */
+  --color-orange-500: hsl(28 100% 52%);
+  --color-blue-500: hsl(233 67% 56%);
+  --color-blue-700: hsl(248 70% 36%);
+  
+  /* Typography */
+  --font-family-body: 'DM Sans', sans-serif;
+  --font-family-heading: 'Bricolage Grotesque', sans-serif;
+  --font-size-base: 1.125rem;
+}
+
+@layer base {
+  html, body, #root {
+    background-color: var(--color-neutral-900);
+    color: var(--color-neutral-0);
+    min-height: 100vh;
+  }
+  
+  body {
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-heading);
+    font-weight: 700;
+  }
+}
