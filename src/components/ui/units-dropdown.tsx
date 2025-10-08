@@ -36,10 +36,22 @@ function OptionItem({ label, isSelected, onClick }: OptionItemProps) {
   )
 }
 
-export function UnitsDropdown() {
+interface UnitsDropdownProps {
+  onClose?: () => void
+}
+
+export function UnitsDropdown({ onClose }: UnitsDropdownProps) {
   const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>('celsius')
   const [windSpeedUnit, setWindSpeedUnit] = useState<WindSpeedUnit>('kmh')
   const [preciptationUnit, setPreciptationUnit] = useState<PreciptationUnit>('mm')
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleOptionClick = (setter: (value: any) => void, value: any) => {
+    setter(value)
+    if (onClose) {
+      onClose()
+    }
+  }
 
   return (
     <div className="w-[214px] h-[412px] bg-neutral-800 rounded-[12px] p-2 flex flex-col gap-1">
@@ -53,12 +65,12 @@ export function UnitsDropdown() {
         <OptionItem
           label="Celsius (°C)"
           isSelected={temperatureUnit === 'celsius'}
-          onClick={() => setTemperatureUnit('celsius')}
+          onClick={() => handleOptionClick(setTemperatureUnit, 'celsius')}
         />
         <OptionItem
           label="Fahrenheit (°F)"
           isSelected={temperatureUnit === 'fahrenheit'}
-          onClick={() => setTemperatureUnit('fahrenheit')}
+          onClick={() => handleOptionClick(setTemperatureUnit, 'fahrenheit')}
         />
       </div>
 
@@ -69,12 +81,12 @@ export function UnitsDropdown() {
         <OptionItem
           label="km/h"
           isSelected={windSpeedUnit === 'kmh'}
-          onClick={() => setWindSpeedUnit('kmh')}
+          onClick={() => handleOptionClick(setWindSpeedUnit, 'kmh')}
         />
         <OptionItem
           label="mph"
           isSelected={windSpeedUnit === 'mph'}
-          onClick={() => setWindSpeedUnit('mph')}
+          onClick={() => handleOptionClick(setWindSpeedUnit, 'mph')}
         />
       </div>
 
@@ -85,12 +97,12 @@ export function UnitsDropdown() {
         <OptionItem
           label="Millimeters (mm)"
           isSelected={preciptationUnit === 'mm'}
-          onClick={() => setPreciptationUnit('mm')}
+          onClick={() => handleOptionClick(setPreciptationUnit, 'mm')}
         />
         <OptionItem
           label="Inches (in)"
           isSelected={preciptationUnit === 'in'}
-          onClick={() => setPreciptationUnit('in')}
+          onClick={() => handleOptionClick(setPreciptationUnit, 'in')}
         />
       </div>
 
