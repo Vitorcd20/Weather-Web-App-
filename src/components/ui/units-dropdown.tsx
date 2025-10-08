@@ -1,4 +1,3 @@
-import { useState } from "react"
 import CheckmarkIcon from '../../assets/images/icon-checkmark.svg'
 
 type TemperatureUnit = 'celsius' | 'fahrenheit'
@@ -37,17 +36,27 @@ function OptionItem({ label, isSelected, onClick }: OptionItemProps) {
 }
 
 interface UnitsDropdownProps {
+  temperatureUnit: TemperatureUnit
+  windSpeedUnit: WindSpeedUnit
+  preciptationUnit: PreciptationUnit
+  onTemperatureChange: (unit: TemperatureUnit) => void
+  onWindSpeedChange: (unit: WindSpeedUnit) => void
+  onPreciptationChange: (unit: PreciptationUnit) => void
   onClose?: () => void
 }
 
-export function UnitsDropdown({ onClose }: UnitsDropdownProps) {
-  const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>('celsius')
-  const [windSpeedUnit, setWindSpeedUnit] = useState<WindSpeedUnit>('kmh')
-  const [preciptationUnit, setPreciptationUnit] = useState<PreciptationUnit>('mm')
+export function UnitsDropdown({ 
+  temperatureUnit,
+  windSpeedUnit,
+  preciptationUnit,
+  onTemperatureChange,
+  onWindSpeedChange,
+  onPreciptationChange,
+  onClose 
+}: UnitsDropdownProps) {
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleOptionClick = (setter: (value: any) => void, value: any) => {
-    setter(value)
+  const handleOptionClick = (callback: () => void) => {
+    callback()
     if (onClose) {
       onClose()
     }
@@ -65,12 +74,12 @@ export function UnitsDropdown({ onClose }: UnitsDropdownProps) {
         <OptionItem
           label="Celsius (°C)"
           isSelected={temperatureUnit === 'celsius'}
-          onClick={() => handleOptionClick(setTemperatureUnit, 'celsius')}
+          onClick={() => handleOptionClick(() => onTemperatureChange('celsius'))}
         />
         <OptionItem
           label="Fahrenheit (°F)"
           isSelected={temperatureUnit === 'fahrenheit'}
-          onClick={() => handleOptionClick(setTemperatureUnit, 'fahrenheit')}
+          onClick={() => handleOptionClick(() => onTemperatureChange('fahrenheit'))}
         />
       </div>
 
@@ -81,12 +90,12 @@ export function UnitsDropdown({ onClose }: UnitsDropdownProps) {
         <OptionItem
           label="km/h"
           isSelected={windSpeedUnit === 'kmh'}
-          onClick={() => handleOptionClick(setWindSpeedUnit, 'kmh')}
+          onClick={() => handleOptionClick(() => onWindSpeedChange('kmh'))}
         />
         <OptionItem
           label="mph"
           isSelected={windSpeedUnit === 'mph'}
-          onClick={() => handleOptionClick(setWindSpeedUnit, 'mph')}
+          onClick={() => handleOptionClick(() => onWindSpeedChange('mph'))}
         />
       </div>
 
@@ -97,15 +106,17 @@ export function UnitsDropdown({ onClose }: UnitsDropdownProps) {
         <OptionItem
           label="Millimeters (mm)"
           isSelected={preciptationUnit === 'mm'}
-          onClick={() => handleOptionClick(setPreciptationUnit, 'mm')}
+          onClick={() => handleOptionClick(() => onPreciptationChange('mm'))}
         />
         <OptionItem
           label="Inches (in)"
           isSelected={preciptationUnit === 'in'}
-          onClick={() => handleOptionClick(setPreciptationUnit, 'in')}
+          onClick={() => handleOptionClick(() => onPreciptationChange('in'))}
         />
       </div>
 
     </div>
   )
 }
+
+export type { TemperatureUnit, WindSpeedUnit, PreciptationUnit }

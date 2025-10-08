@@ -2,10 +2,13 @@ import { useState } from "react";
 import Logo from "../assets/images/logo.svg";
 import IconDropdown from "../assets/images/icon-dropdown.svg";
 import IconUnits from "../assets/images/icon-units.svg";
-import { UnitsDropdown } from "./ui/units-dropdown";
+import { UnitsDropdown, type PreciptationUnit, type TemperatureUnit, type WindSpeedUnit } from "./ui/units-dropdown";
 
 export function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>('celsius');
+  const [windSpeedUnit, setWindSpeedUnit] = useState<WindSpeedUnit>('kmh');
+  const [preciptationUnit, setPreciptationUnit] = useState<PreciptationUnit>('mm');
 
   return (
     <div className="flex items-center justify-between w-[1216px]">
@@ -24,7 +27,15 @@ export function Header() {
         
         {isDropdownOpen && (
           <div className="absolute right-0 mt-2 z-10">
-            <UnitsDropdown onClose={() => setIsDropdownOpen(false)} />
+            <UnitsDropdown 
+              temperatureUnit={temperatureUnit}
+              windSpeedUnit={windSpeedUnit}
+              preciptationUnit={preciptationUnit}
+              onTemperatureChange={setTemperatureUnit}
+              onWindSpeedChange={setWindSpeedUnit}
+              onPreciptationChange={setPreciptationUnit}
+              onClose={() => setIsDropdownOpen(false)} 
+            />
           </div>
         )}
       </div>
