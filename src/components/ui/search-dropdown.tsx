@@ -1,31 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchBar } from "../search-bar";
+import { useLocationSearch } from "@/hooks/use-location-search";
+import { useDropdown } from "@/hooks/use-dropdown";
+import { formatLocationDetails, type Location } from "@/utils/utils";
 
-export function SearchDropdown() {
-  const [selected, setSelected] = useState<number>(0);
-  const [isOpen, setIsOpen] = useState(false);
+
+interface SearchDropdownProps {
+  onLocationSelect?: (location: Location) => void;
+}
+
+export function SearchDropdown({ onLocationSelect }: SearchDropdownProps) {
   const [searchValue, setSearchValue] = useState("");
+  const { locations, isLoading } = useLocationSearch(searchValue);
+  const { isOpen, setIsOpen, selected, setSelected, dropdownRef } = useDropdown();
+
+  useEffect(() => {
+    setSelected(-1);
+    setIsOpen(locations.length > 0 && searchValue.length >= 2);
+  }, [searchValue, locations.length, setSelected, setIsOpen]);
+
+  const handleLocationClick = (location: Location, index: number) => {
+    setSelected(index);
+    setSearchValue(location.name);
+    setIsOpen(false);
+    onLocationSelect?.(location);
+  };
+
+
+  const showNoResults = isOpen && locations.length === 0 && !isLoading && searchValue.length >= 2;
 
   return (
-    <div className="relative w-[524px]">
+    <div className="relative w-[524px]" ref={dropdownRef}>
       <SearchBar
         value={searchValue}
         onChange={setSearchValue}
-        onFocus={() => setIsOpen(true)}
+        onFocus={() => {
+          if (locations.length > 0) {
+            setIsOpen(true);
+          }
+        }}
       />
 
-      {isOpen && (
-        <div className="absolute top-[52px] w-full bg-neutral-800 rounded-lg p-2 space-y-2 shadow-lg z-10">
-          {[1, 2, 3, 4].map((item, index) => (
+      {isOpen && locations.length > 0 && (
+        <div className="absolute top-[52px] w-full bg-neutral-800 rounded-lg p-2 space-y-2 shadow-lg z-50">
+          {locations.map((location, index) => (
             <div
-              key={index}
-              onClick={() => {
-                setSelected(index);
-                setSearchValue(`Opção ${item}`);
-                setIsOpen(false);
-              }}
+              key={location.id}
+              onClick={() => handleLocationClick(location, index)}
               className={`
-                w-full h-[39px] rounded-lg flex items-center px-3 cursor-pointer transition-colors
+                w-full min-h-[39px] rounded-lg flex flex-col justify-center px-3 cursor-pointer transition-colors
                 ${
                   selected === index
                     ? "bg-neutral-700 hover:bg-neutral-600"
@@ -33,9 +56,22 @@ export function SearchDropdown() {
                 }
               `}
             >
-              <span className="text-white text-sm">Opção {item}</span>
+              <span className="text-white text-sm font-medium">
+                {location.name}
+              </span>
+              <span className="text-neutral-400 text-xs">
+                {formatLocationDetails(location)}
+              </span>
             </div>
           ))}
+        </div>
+      )}
+
+      {showNoResults && (
+        <div className="absolute top-[52px] w-full bg-neutral-800 rounded-lg p-4 shadow-lg z-50">
+          <span className="text-neutral-400 text-sm">
+            No locations found
+          </span>
         </div>
       )}
     </div>
